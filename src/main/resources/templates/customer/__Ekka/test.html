@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Welcome to Spring Security Thymeleaf tutorial</title>
+</head>
+<body>
+<h2>Welcome</h2>
+<p>Spring Security Thymeleaf tutorial</p>
+<div sec:authorize="hasRole('ROLE_USER')">Text visible to user.</div>
+<div sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</div>
+<div sec:authorize="isAuthenticated()">
+    Text visible only to authenticated users.
+</div>
+Authenticated username:
+<div sec:authentication="name"></div>
+Authenticated id:
+<div sec:authentication="principal.user.id"></div>
+Authenticated user roles:
+<div sec:authentication="principal.authorities"></div>
+</body>
+</html>

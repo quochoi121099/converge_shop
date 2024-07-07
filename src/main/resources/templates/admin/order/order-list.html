@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html data-navigation-type="default" data-navbar-horizontal-shape="default" lang="en-US" dir="ltr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Phoenix</title>
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicons/favicon.ico">
+    <link rel="manifest" href="img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script th:src="@{/admin/vendors/simplebar/simplebar.min.js}"></script>
+    <script th:src="@{/admin/js/config.js}"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="/admin/css2.css" type="text/html" rel="stylesheet">
+    <link th:src="@{/admin/vendors/simplebar/simplebar.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/release/v4.0.8/css/line.css">
+    <link th:href="@{/admin/css/theme-rtl.min.css}" type="text/css" rel="stylesheet" id="style-rtl">
+    <link th:href="@{/admin/css/theme.min.css}" type="text/css" rel="stylesheet" id="style-default">
+    <link th:href="@{/admin/css/user-rtl.min.css}" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link th:href="@{/admin/css/user.min.css}" type="text/css" rel="stylesheet" id="user-style-default">
+    <script>
+        var phoenixIsRTL = window.config.config.phoenixIsRTL;
+        if (phoenixIsRTL) {
+          var linkDefault = document.getElementById('style-default');
+          var userLinkDefault = document.getElementById('user-style-default');
+          linkDefault.setAttribute('disabled', true);
+          userLinkDefault.setAttribute('disabled', true);
+          document.querySelector('html').setAttribute('dir', 'rtl');
+        } else {
+          var linkRTL = document.getElementById('style-rtl');
+          var userLinkRTL = document.getElementById('user-style-rtl');
+          linkRTL.setAttribute('disabled', true);
+          userLinkRTL.setAttribute('disabled', true);
+        }
+    </script>
+    <link th:src="@{/admin/vendors/leaflet/leaflet.css}" rel="stylesheet">
+    <link th:src="@{/admin/vendors/leaflet.markercluster/MarkerCluster.css}" rel="stylesheet">
+    <link th:src="@{/admin/vendors/leaflet.markercluster/MarkerCluster.Default.css}" rel="stylesheet">
+</head>
+
+<body>
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div th:replace="~{admin/__fragments/menu.html :: menu}"></div>
+    <div th:replace="~{admin/__fragments/header.html :: header}"></div>
+
+    <div class="content">
+        <nav class="mb-2" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#!">Page 1</a></li>
+                <li class="breadcrumb-item"><a href="#!">Page 2</a></li>
+                <li class="breadcrumb-item active">Default</li>
+            </ol>
+        </nav>
+        <div class="mb-9">
+            <div class="row g-3 mb-4">
+                <div class="col-auto">
+                    <h2 class="mb-0">Orders</h2>
+                </div>
+            </div>
+            <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#"><span>All </span><span class="text-body-tertiary fw-semibold">(68817)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><span>Pending payment </span><span class="text-body-tertiary fw-semibold">(6)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><span>Unfulfilled </span><span class="text-body-tertiary fw-semibold">(17)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><span>Completed</span><span class="text-body-tertiary fw-semibold">(6,810)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><span>Refunded</span><span class="text-body-tertiary fw-semibold">(8)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><span>Failed</span><span class="text-body-tertiary fw-semibold">(2)</span></a></li>
+            </ul>
+            <div id="orderTable" data-list='{"valueNames":["order","total","customer","payment_status","fulfilment_status","delivery_type","date"],"page":10,"pagination":true}'>
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <div class="search-box">
+                                <form class="position-relative"><input class="form-control search-input search" type="search" placeholder="Search orders" aria-label="Search">
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
+                            <div class="btn-group position-static" role="group">
+                                <div class="btn-group position-static text-nowrap" role="group"><button class="btn btn-phoenix-secondary px-7 flex-shrink-0" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"> Payment status<span class="fas fa-angle-down ms-2"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#">Action</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                    </ul>
+                                </div>
+                                <div class="btn-group position-static text-nowrap" role="group"><button class="btn btn-sm btn-phoenix-secondary px-7 flex-shrink-0" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"> Fulfilment status<span class="fas fa-angle-down ms-2"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#">Action</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                    </ul>
+                                </div><button class="btn btn-sm btn-phoenix-secondary px-7 flex-shrink-0">More filters </button>
+                            </div>
+                        </div>
+                        <div class="col-auto"><button class="btn btn-link text-body me-4 px-0"><span class="fa-solid fa-file-export fs-9 me-2"></span>Export</button><button class="btn btn-primary"><span class="fas fa-plus me-2"></span>Add order</button></div>
+                    </div>
+                </div>
+                <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-body-emphasis border-top border-bottom border-translucent position-relative top-1">
+                    <div class="table-responsive scrollbar mx-n1 px-1">
+                        <table class="table table-sm fs-9 mb-0">
+                            <thead>
+                            <tr>
+                                <th class="white-space-nowrap fs-9 align-middle ps-0" style="width:26px;">
+                                    <div class="form-check mb-0 fs-8"><input class="form-check-input" id="checkbox-bulk-order-select" type="checkbox" data-bulk-select='{"body":"order-table-body"}'></div>
+                                </th>
+                                <th class="sort white-space-nowrap align-middle pe-3" scope="col" data-sort="order" style="width:5%;">ORDER</th>
+                                <th class="sort align-middle text-end" scope="col" data-sort="total" style="width:6%;">TOTAL</th>
+                                <th class="sort align-middle ps-8" scope="col" data-sort="customer" style="width:14%; min-width: 100px;">CUSTOMER</th>
+                                <th class="sort align-middle" scope="col" data-sort="total" style="width:6%;">NAME</th>
+                                <th class="sort align-middle pe-3" scope="col" data-sort="payment_status" style="width:10%;">PAYMENT STATUS</th>
+                                <th class="sort align-middle text-start pe-3" scope="col" data-sort="fulfilment_status" style="width:12%; min-width: 200px;">FULFILMENT STATUS</th>
+                                <th class="sort align-middle text-start" scope="col" data-sort="delivery_type" style="width:30%;">DELIVERY TYPE</th>
+                                <th class="sort align-middle text-end pe-0" scope="col" data-sort="date">DATE</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list" id="order-table-body">
+                            <tr class="hover-actions-trigger btn-reveal-trigger position-static" th:each="order : ${orderList}">
+                                <td class="fs-9 align-middle ps-0 py-3">
+                                    <div class="form-check mb-0 fs-8"><input class="form-check-input" type="checkbox"
+                                                                             th:attr="data-bulk-select-row=${order.id}"></div>
+                                </td>
+                                <td class="order align-middle white-space-nowrap py-0"><a class="fw-semibold" th:text="${order.id}"></a></td>
+                                <td class="total align-middle text-end fw-semibold text-body-highlight" th:text="'$' + ${order.totalAmount}"></td>
+                                <td class="customer align-middle white-space-nowrap ps-8">
+                                        <img style="max-width: 100px; min-width: 70px;" class="" th:src="@{'/media/images/user/' + ${order.user.imageNames[0]}}" alt="User Image">
+
+                                </td>
+                                <td class="role align-middle white-space-nowrap py-0">
+                                    <h6 class="align-middle" th:text="${order.user.lastName}"></h6>
+                                </td>
+                                <td class="payment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary"><span class="badge badge-phoenix fs-10 badge-phoenix-success"><span class="badge-label" th:text="${order.paymentStatus}"></span><span class="ms-1" data-feather="check" style="height:12.8px;width:12.8px;"></span></span></td>
+                                <td class="fulfilment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary"><span class="badge badge-phoenix fs-10 badge-phoenix-warning"><span class="badge-label" th:text="${order.fulfilStatus}"></span><span class="ms-1" data-feather="x" style="height:12.8px;width:12.8px;"></span></span></td>
+                                <td class="fulfilment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary"><span class="badge badge-phoenix fs-10 badge-phoenix-primary"><span class="badge-label" th:text="${order.deliveryType}"></span><span class="ms-1" data-feather="" style="height:12.8px;width:12.8px;"></span></span></td>
+                                <td class="date align-middle white-space-nowrap text-body-tertiary fs-9 ps-4 text-end" th:text="${order.createdAt}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+                        <div class="col-auto d-flex">
+                            <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p><a class="fw-semibold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semibold d-none" href="#!" data-list-view="less">View Less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+                        </div>
+                        <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                            <ul class="mb-0 pagination"></ul><button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer position-absolute">
+            <div class="row g-0 justify-content-between align-items-center h-100">
+                <div class="col-12 col-sm-auto text-center">
+                    <p class="mb-0 mt-2 mt-sm-0 text-body">Thank you for creating with Phoenix<span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span><br class="d-sm-none">2024 &copy;<a class="mx-1" href="https://themewagon.com">Themewagon</a></p>
+                </div>
+                <div class="col-12 col-sm-auto text-center">
+                    <p class="mb-0 text-body-tertiary text-opacity-85">v1.16.0</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="support-chat-container">
+        <div class="container-fluid support-chat">
+            <div class="card bg-body-emphasis">
+                <div class="card-header d-flex flex-between-center px-4 py-3 border-bottom border-translucent">
+                    <h5 class="mb-0 d-flex align-items-center gap-2">Demo widget<span class="fa-solid fa-circle text-success fs-11"></span></h5>
+                    <div class="btn-reveal-trigger"><button class="btn btn-link p-0 dropdown-toggle dropdown-caret-none transition-none d-flex" type="button" id="support-chat-dropdown" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h text-body"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="support-chat-dropdown"><a class="dropdown-item" href="#!">Request a callback</a><a class="dropdown-item" href="#!">Search in chat</a><a class="dropdown-item" href="#!">Show history</a><a class="dropdown-item" href="#!">Report to Admin</a><a class="dropdown-item btn-support-chat" href="#!">Close Support</a></div>
+                    </div>
+                </div>
+                <div class="card-body chat p-0">
+                    <div class="d-flex flex-column-reverse scrollbar h-100 p-3">
+                        <div class="text-end mt-6"><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
+                            <p class="mb-0 fw-semibold fs-9">I need help with something</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
+                            <p class="mb-0 fw-semibold fs-9">I can’t reorder a product I previously ordered</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
+                            <p class="mb-0 fw-semibold fs-9">How do I place an order?</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="false d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
+                            <p class="mb-0 fw-semibold fs-9">My payment method not working</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a></div>
+                        <div class="text-center mt-auto">
+                            <div class="avatar avatar-3xl status-online"><img class="rounded-circle border border-3 border-light-subtle" src="/admin/img/team/30.webp" alt=""></div>
+                            <h5 class="mt-2 mb-3">Eric</h5>
+                            <p class="text-center text-body-emphasis mb-0">Ask us anything – we’ll get back to you here or by email within 24 hours.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center gap-2 border-top border-translucent ps-3 pe-4 py-3">
+                    <div class="d-flex align-items-center flex-1 gap-3 border border-translucent rounded-pill px-4"><input class="form-control outline-none border-0 flex-1 fs-9 px-0" type="text" placeholder="Write message"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatPhotos"><span class="fa-solid fa-image"></span></label><input class="d-none" type="file" accept="image/*" id="supportChatPhotos"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatAttachment"> <span class="fa-solid fa-paperclip"></span></label><input class="d-none" type="file" id="supportChatAttachment"></div><button class="btn p-0 border-0 send-btn"><span class="fa-solid fa-paper-plane fs-9"></span></button>
+                </div>
+            </div>
+        </div><button class="btn p-0 border border-translucent btn-support-chat"><span class="fs-8 btn-text text-primary text-nowrap">Chat demo</span><span class="fa-solid fa-circle text-success fs-9 ms-2"></span><span class="fa-solid fa-chevron-down text-primary fs-7"></span></button>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<script th:src="@{/admin/vendors/popper/popper.min.js}"></script>
+<script th:src="@{/admin/vendors/bootstrap/bootstrap.min.js}"></script>
+<script th:src="@{/admin/vendors/anchorjs/anchor.min.js}"></script>
+<script th:src="@{/admin/vendors/is/is.min.js}"></script>
+<script th:src="@{/admin/vendors/fontawesome/all.min.js}"></script>
+<script th:src="@{/admin/vendors/lodash/lodash.min.js}"></script>
+<script src="/admin/v3/polyfill.min.js?features=window.scroll"></script>
+<script th:src="@{/admin/vendors/list.js/list.min.js}"></script>
+<script th:src="@{/admin/vendors/feather-icons/feather.min.js}"></script>
+<script th:src="@{/admin/vendors/dayjs/dayjs.min.js}"></script>
+<script th:src="@{/admin/vendors/leaflet/leaflet.js}"></script>
+<script th:src="@{/admin/vendors/leaflet.markercluster/leaflet.markercluster.js}"></script>
+<script th:src="@{/admin/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js}"></script>
+<script th:src="@{/admin/js/phoenix.js}"></script>
+<script th:src="@{/admin/vendors/echarts/echarts.min.js}"></script>
+<script th:src="@{/admin/js/ecommerce-dashboard.js}"></script>
+</body>
+
+</html>

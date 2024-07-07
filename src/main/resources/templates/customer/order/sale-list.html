@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phoenix</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/admin/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/admin/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/admin/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/admin/img/favicons/favicon.ico">
+    <link rel="manifest" href="/admin/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="/admin/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="/admin/vendors/simplebar/simplebar.min.js"></script>
+    <script src="/admin/js/config.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="/admin/css2.css" type="text/html" rel="stylesheet">
+    <link href="/admin/vendors/simplebar/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/release/v4.0.8/css/line.css">
+    <link href="/admin/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="/admin/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="/admin/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="/admin/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+</head>
+<body>
+<main class="main" id="top">
+    <div th:replace="~{customer/__fragments/header.html :: header}"></div>
+    <section class="pt-5 pb-9">
+        <div class="container-small cart">
+            <form th:action="@{/order/cart}" method="get">
+                <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+
+                <div class="row g-5">
+                    <div class="col-12 col-lg-8">
+                        <div class="table-responsive scrollbar mx-n1 px-1">
+                            <div th:if="${not #lists.isEmpty(topSales)}">
+                                <h3 class="text-center">Sales meet conditions</h3>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Name</th>
+                                        <th>Min Price</th>
+                                        <th>Discount Percentage</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="sale, iterStat : ${topSales}">
+                                        <td>
+                                            <input type="radio" th:id="'radio_' + ${iterStat.index}"
+                                                   th:name="selectedSale" th:value="${sale.id}">
+                                        </td>
+                                        <td th:text="${sale.name}"></td>
+                                        <td th:text="${sale.saleCondition.minPrice}"></td>
+                                        <td th:text="${sale.discountPercentage}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div th:if="${not #lists.isEmpty(otherSales)}">
+                                <h3 class="text-center">Sales do not meet the conditions</h3>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Min Price</th>
+                                        <th>Discount Percentage</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="sale : ${otherSales}">
+                                        <td th:text="${sale.name}"></td>
+                                        <td th:text="${sale.saleCondition.minPrice}"></td>
+                                        <td th:text="${sale.discountPercentage}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div th:if="${#lists.isEmpty(topSales) && #lists.isEmpty(otherSales)}">
+                                <p>No sales available.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <div th:replace="~{customer/__fragments/footer.html :: footer}"></div>
+</main>
+<script src="/admin/vendors/popper/popper.min.js"></script>
+<script src="/admin/vendors/bootstrap/bootstrap.min.js"></script>
+<script src="/admin/vendors/anchorjs/anchor.min.js"></script>
+<script src="/admin/vendors/is/is.min.js"></script>
+<script src="/admin/vendors/fontawesome/all.min.js"></script>
+<script src="/admin/vendors/lodash/lodash.min.js"></script>
+<script src="/admin/v3/polyfill.min.js?features=window.scroll"></script>
+<script src="/admin/vendors/list.js/list.min.js"></script>
+<script src="/admin/vendors/feather-icons/feather.min.js"></script>
+<script src="/admin/vendors/dayjs/dayjs.min.js"></script>
+<script src="/admin/js/phoenix.js"></script>
+</body>
+</html>

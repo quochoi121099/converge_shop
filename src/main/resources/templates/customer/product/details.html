@@ -1,0 +1,977 @@
+﻿<!DOCTYPE html>
+<html data-navigation-type="default" data-navbar-horizontal-shape="default" lang="en-US" dir="ltr"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Phoenix</title>
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/admin/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/admin/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/admin/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/admin/img/favicons/favicon.ico">
+    <link rel="manifest" href="/admin/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="/admin/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="/admin/vendors/simplebar/simplebar.min.js"></script>
+    <script src="/admin/js/config.js"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="/admin/vendors/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="/admin/vendors/dropzone/dropzone.min.css" rel="stylesheet">
+    <link href="/admin/vendors/glightbox/glightbox.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="/admin/css2.css" type="text/html" rel="stylesheet">
+    <link href="/admin/vendors/simplebar/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/release/v4.0.8/css/line.css">
+    <link href="/admin/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="/admin/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="/admin/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="/admin/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <script>
+        var phoenixIsRTL = window.config.config.phoenixIsRTL;
+        if (phoenixIsRTL) {
+          var linkDefault = document.getElementById('style-default');
+          var userLinkDefault = document.getElementById('user-style-default');
+          linkDefault.setAttribute('disabled', true);
+          userLinkDefault.setAttribute('disabled', true);
+          document.querySelector('html').setAttribute('dir', 'rtl');
+        } else {
+          var linkRTL = document.getElementById('style-rtl');
+          var userLinkRTL = document.getElementById('user-style-rtl');
+          linkRTL.setAttribute('disabled', true);
+          userLinkRTL.setAttribute('disabled', true);
+        }
+    </script>
+</head>
+
+<body>
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+
+    <div th:replace="~{customer/__fragments/header.html :: header}"></div>
+
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+
+    <div class="pt-5 pb-9">
+
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <section class="py-0">
+            <div class="container-small">
+                <div class="row g-5 mb-5 mb-lg-8" data-product-details="data-product-details">
+                    <div class="col-12 col-lg-6">
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-2 col-lg-12 col-xl-2">
+                                <div class="swiper-products-thumb swiper swiper theme-slider overflow-visible"
+                                     id="swiper-products-thumb"></div>
+                            </div>
+                            <div class="col-12 col-md-10 col-lg-12 col-xl-10">
+                                <div class="d-flex align-items-center border border-translucent rounded-3 text-center p-5 h-100">
+                                    <div class="swiper swiper theme-slider"
+                                         data-thumb-target="swiper-products-thumb"
+                                         data-products-swiper='{"slidesPerView":1,"spaceBetween":16,"thumbsEl":".swiper-products-thumb"}'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <form th:action="@{/addOrUpdateWishlist}" method="post" th:if="${wishlist == null}">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <button type="submit" class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs-9 fs-sm-8">
+                                    <span class="me-2 far fa-heart"></span>Thêm vào danh sách yêu thích
+                                </button>
+                            </form>
+                            <form id="addToCartForm" th:action="@{/product/details/{uuid}(uuid=${product.id})}" method="post">
+                                <input type="hidden" name="quantity" id="cartQuantityInput" value="1">
+                                <input type="hidden" name="note" id="cartNoteInput" value="">
+                                <button type="submit" class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8">
+                                    <span class="fas fa-shopping-cart me-2"></span>
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="d-flex flex-column justify-content-between h-100">
+                            <div>
+                                <div class="d-flex flex-wrap">
+                                    <div class="me-2"><span class="fa fa-star text-warning"></span><span
+                                            class="fa fa-star text-warning"></span><span
+                                            class="fa fa-star text-warning"></span><span
+                                            class="fa fa-star text-warning"></span><span
+                                            class="fa fa-star text-warning"></span></div>
+                                    <p class="text-primary fw-semibold mb-2">6548 người đã đánh giá và nhận xét </p>
+                                </div>
+                                <h3 class="mb-3 lh-sm" th:text="${product.name}"></h3>
+                                <div class="d-flex flex-wrap align-items-start mb-3"><span
+                                        class="badge text-bg-success fs-9 rounded-pill me-2 fw-semibold">#1 Bán chạy nhất</span><a
+                                        class="fw-semibold" href="#!">trong phân tích bán hàng Phoenix 2021</a></div>
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <h1 class="me-3" th:text="${product.price} * 0.9"></h1>
+                                    <p class="text-body-quaternary text-decoration-line-through fs-6 mb-0 me-3"
+                                       th:text="${product.price}"></p>
+                                    <p class="text-warning fw-bolder fs-6 mb-0">Giảm 10%</p>
+                                </div>
+                                <p class="text-success fw-semibold fs-7 mb-2"
+                                   th:text="${product.quantity} > 0 ? 'Còn hàng' : 'Hết hàng'"></p>
+                                <p class="mb-2 text-body-secondary"><strong class="text-body-highlight">Bạn muốn nhận hàng vào Thứ Bảy, ngày 29 tháng 7?</strong> Chọn <strong class="text-body-highlight">Giao hàng Thứ Bảy </strong>tại bước thanh toán nếu bạn muốn đơn hàng của bạn được giao trong vòng 12 giờ 43 phút, <a class="fw-bold" href="#!">Chi tiết. </a><strong
+                                        class="text-body-highlight">Có dịch vụ gói quà.</strong></p>
+                                <p class="text-danger-dark fw-bold mb-5 mb-lg-0">Ưu đãi đặc biệt kết thúc trong 23:00:45 giờ</p>
+                            </div>
+                            <div>
+                                <div class="mb-3">
+                                    <p class="fw-semibold mb-2 text-body"><span class="text-body-emphasis"
+                                                                                data-product-color="data-product-color"></span>
+                                    </p>
+                                    <div class="d-flex product-color-variants"
+                                         data-product-color-variants="data-product-color-variants">
+                                        <div class="rounded-1 border border-translucent me-2 active" data-variant=""
+                                             th:data-products-images='@{@{["} + ${imageName} + @{"]}}'
+                                             th:each="imageName : ${product.imageNames}"><img
+                                                th:src="@{${imageName}}" alt="" width="38"></div>
+                                    </div>
+                                </div>
+                                <div class="row g-3 g-sm-5 align-items-end">
+                                    <div class="col-12 col-sm-auto">
+                                        <p class="fw-semibold mb-2 text-body">Trong kho : <a
+                                                th:text="${product.quantity}"></a></p>
+                                    </div>
+                                    <div class="col-12 col-sm">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div class="d-flex flex-between-center" data-quantity="data-quantity">
+                                                <p class="fw-semibold mb-2 text-body">Số lượng : </p>
+                                                <button type="button" class="btn btn-phoenix-primary px-3"
+                                                        onclick="changeQuantity(-1)"><span
+                                                        class="fas fa-minus"></span></button>
+                                                <input class="form-control text-center input-spin-none bg-transparent border-0 outline-none"
+                                                       style="width:50px;" type="number" th:max="${product.quantity}"
+                                                       min="1" name="quantity"
+                                                       value="1" id="quantityInput">
+                                                <button type="button" class="btn btn-phoenix-primary px-3"
+                                                        onclick="changeQuantity(1)"><span
+                                                        class="fas fa-plus"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="note" class="form-label">Ghi chú:</label>
+                                    <textarea id="note" name="note" class="form-control"
+                                              placeholder="Yêu cầu chi tiết"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end of .container-->
+        </section>
+
+
+
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
+
+
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <section class="py-0">
+            <div class="container-small">
+                <ul class="nav nav-underline fs-9 mb-4" id="productTab" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                            href="#tab-description" role="tab" aria-controls="tab-description"
+                                            aria-selected="true">Description</a></li>
+                    <li class="nav-item"><a class="nav-link" id="specification-tab" data-bs-toggle="tab"
+                                            href="#tab-specification" role="tab" aria-controls="tab-specification"
+                                            aria-selected="false">Specification</a></li>
+                    <li class="nav-item"><a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#tab-reviews"
+                                            role="tab" aria-controls="tab-reviews" aria-selected="false">Ratings &amp;
+                        reviews</a></li>
+                </ul>
+                <div class="row gx-3 gy-7">
+                    <div class="col-12 col-lg-7 col-xl-8">
+                        <div class="tab-content" id="productTabContent">
+                            <div class="tab-pane pe-lg-6 pe-xl-12 fade show active text-body-emphasis"
+                                 id="tab-description" role="tabpanel" aria-labelledby="description-tab">
+                                <p class="mb-5" th:text="${product.description}"></p>
+                            </div>
+                            <div class="tab-pane pe-lg-6 pe-xl-12 fade" id="tab-specification" role="tabpanel"
+                                 aria-labelledby="specification-tab">
+                                <h3 class="mb-0 ms-4 fw-bold">Processor/Chipset</h3>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 40%"></th>
+                                        <th style="width: 60%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">Chip
+                                                name</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.chipName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">Cpu
+                                                core</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.CPUCore}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">Gpu
+                                                core</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.GPUCore}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">Neural
+                                                engine</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.neuralEngine}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Storage</h3>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 40%"></th>
+                                        <th style="width: 60%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Memory</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.memory}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">SSD</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.SSD}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Display</h3>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 40%"></th>
+                                        <th style="width: 60%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">Display
+                                                type</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.displayType}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Size</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.size}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Resolution</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.resolution}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Brightness</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.brightness}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-0 mt-6 ms-4 fw-bold">Additional Specifications</h3>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 40%"></th>
+                                        <th style="width: 60%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Camera</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.camera}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight">
+                                            <h6 class="mb-0 mt-1 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Video </h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.video}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight">
+                                            <h6 class="mb-0 mt-1 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Audio</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.audio}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight">
+                                            <h6 class="mb-0 mt-1 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Inputs </h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.inputs}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight">
+                                            <h6 class="mb-0 mt-1 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Wireless </h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.wireless}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight">
+                                            <h6 class="mb-0 mt-1 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">I/O
+                                                &amp; expantions </h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.inputOrOutputAndExpansions}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-body-highlight align-middle">
+                                            <h6 class="mb-0 text-body text-uppercase fw-bolder px-4 fs-9 lh-sm">
+                                                Operating System</h6>
+                                        </td>
+                                        <td class="px-5 mb-0" th:text="${specification.operatingSystem}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h3 class="mb-3 mt-6 ms-4 fw-bold">In The Box</h3>
+                                <p class="lh-sm border-top border-translucent mb-0 py-3 px-4"
+                                   th:text="${specification.inTheBox}"></p>
+                            </div>
+                            <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                <div class="bg-body-emphasis rounded-3 p-4 border border-translucent">
+                                    <div class="row g-3 justify-content-between mb-4">
+                                        <div class="col-auto">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <h2 th:text="${rateAverage}"></h2>
+                                                <span class="fs-8 text-body-quaternary fw-bold" th:text="@{/5}"></span>
+                                                <div class="me-3">
+                                                    <!-- Star 1 -->
+                                                    <span class="fa fa-star text-warning fs-6"
+                                                          th:if="${rateAverage >= 0.75}"></span>
+                                                    <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                          th:if="${rateAverage >= 0.25 and rateAverage < 0.75}"></span>
+
+                                                    <!-- Star 2 -->
+                                                    <span class="fa fa-star text-warning fs-6"
+                                                          th:if="${rateAverage >= 1.75}"></span>
+                                                    <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                          th:if="${rateAverage >= 1.25 and rateAverage < 1.75}"></span>
+
+                                                    <!-- Star 3 -->
+                                                    <span class="fa fa-star text-warning fs-6"
+                                                          th:if="${rateAverage >= 2.75}"></span>
+                                                    <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                          th:if="${rateAverage >= 2.25 and rateAverage < 2.75}"></span>
+
+                                                    <!-- Star 4 -->
+                                                    <span class="fa fa-star text-warning fs-6"
+                                                          th:if="${rateAverage >= 3.75}"></span>
+                                                    <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                          th:if="${rateAverage >= 3.25 and rateAverage < 3.75}"></span>
+
+                                                    <!-- Star 5 -->
+                                                    <span class="fa fa-star text-warning fs-6"
+                                                          th:if="${rateAverage >= 4.75}"></span>
+                                                    <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                          th:if="${rateAverage >= 4.25 and rateAverage < 4.75}"></span>
+
+                                                </div>
+                                                <p class="text-body mb-0 fw-semibold fs-7"
+                                                   th:text="${rateList.size()} + ' rate'"></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+                                                    data-bs-target="#reviewModal">Rate this product
+                                            </button>
+                                            <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content p-4">
+                                                        <div class="d-flex flex-between-center mb-2">
+                                                            <h5 class="modal-title fs-8 mb-0">Your rating</h5>
+                                                            <button class="btn p-0 fs-10">Clear</button>
+                                                        </div>
+                                                        <div class="mb-3" data-rater='{"starSize":32,"step":0.5}'></div>
+                                                        <div class="mb-3">
+                                                            <h5 class="text-body-highlight mb-3">Your review</h5>
+                                                            <textarea class="form-control" id="reviewTextarea" rows="5"
+                                                                      placeholder="Write your review"> </textarea>
+                                                        </div>
+                                                        <div class="dropzone dropzone-multiple p-0 mb-3"
+                                                             id="my-awesome-dropzone" data-dropzone="">
+                                                            <div class="fallback"><input name="file" type="file"
+                                                                                         multiple=""></div>
+                                                            <div class="dz-preview d-flex flex-wrap">
+                                                                <div class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2"
+                                                                     style="height:80px;width:80px;"><img
+                                                                        class="dz-image"
+                                                                        src="/admin/img/products/23.png" alt="..."
+                                                                        data-dz-thumbnail=""><a
+                                                                        class="dz-remove text-body-quaternary" href="#!"
+                                                                        data-dz-remove=""><span data-feather="x"></span></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dz-message text-body-tertiary text-opacity-85 fw-bold fs-9 p-4"
+                                                                 data-dz-message=""> Drag your photo here <span
+                                                                    class="text-body-secondary">or </span>
+                                                                <button class="btn btn-link p-0">Browse from device
+                                                                </button>
+                                                                <br><img class="mt-3 me-2"
+                                                                         src="/admin/img/icons/image-icon.png"
+                                                                         width="24" alt=""></div>
+                                                        </div>
+                                                        <div class="d-sm-flex flex-between-center">
+                                                            <div class="form-check flex-1"><input
+                                                                    class="form-check-input" id="reviewAnonymously"
+                                                                    type="checkbox" value="" checked=""><label
+                                                                    class="form-check-label mb-0 text-body-emphasis fw-semibold"
+                                                                    for="reviewAnonymously">Review anonymously</label>
+                                                            </div>
+                                                            <button class="btn ps-0" data-bs-dismiss="modal">Close
+                                                            </button>
+                                                            <button class="btn btn-primary rounded-pill">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 hover-actions-trigger btn-reveal-trigger border p-3"
+                                         th:each="rate : ${rateList}">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="mb-2">
+                                                <!-- Star 1 -->
+                                                <span class="fa fa-star text-warning fs-6"
+                                                      th:if="${rate.score >= 0.75}"></span>
+                                                <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                      th:if="${rate.score >= 0.25 and rate.score < 0.75}"></span>
+
+                                                <!-- Star 2 -->
+                                                <span class="fa fa-star text-warning fs-6"
+                                                      th:if="${rate.score >= 1.75}"></span>
+                                                <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                      th:if="${rate.score >= 1.25 and rate.score < 1.75}"></span>
+
+                                                <!-- Star 3 -->
+                                                <span class="fa fa-star text-warning fs-6"
+                                                      th:if="${rate.score >= 2.75}"></span>
+                                                <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                      th:if="${rate.score >= 2.25 and rate.score < 2.75}"></span>
+
+                                                <!-- Star 4 -->
+                                                <span class="fa fa-star text-warning fs-6"
+                                                      th:if="${rate.score >= 3.75}"></span>
+                                                <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                      th:if="${rate.score >= 3.25 and rate.score < 3.75}"></span>
+
+                                                <!-- Star 5 -->
+                                                <span class="fa fa-star text-warning fs-6"
+                                                      th:if="${rate.score >= 4.75}"></span>
+                                                <span class="fa fa-star-half-alt star-icon text-warning fs-6"
+                                                      th:if="${rate.score >= 4.25 and rate.score < 4.75}"></span>
+
+                                                <span class="text-body-secondary ms-1"> by</span>
+                                                <span th:text="${rate.createdBy}"></span>
+                                            </h5>
+                                        </div>
+                                        <div th:text="${rate.comment}"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <nav>
+                                            <ul class="pagination mb-0">
+                                                <li class="page-item"><a class="page-link" href="#!"><span
+                                                        class="fas fa-chevron-left"> </span></a></li>
+                                                <li class="page-item"><a class="page-link" href="#!">1</a></li>
+                                                <li class="page-item"><a class="page-link" href="#!">2</a></li>
+                                                <li class="page-item"><a class="page-link" href="#!">3</a></li>
+                                                <li class="page-item active"><a class="page-link" href="#!">4</a></li>
+                                                <li class="page-item"><a class="page-link" href="#!">5</a></li>
+                                                <li class="page-item"><a class="page-link" href="#!"><span
+                                                        class="fas fa-chevron-right"></span></a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5 col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-body-emphasis">Usually Bought Together</h5>
+                                <div class="w-75">
+                                    <p class="text-body-tertiary fs-9 fw-bold line-clamp-1">with 24" iMac® with Retina
+                                        4.5K display - Apple M1 8GB Memory - 256GB SSD - w/Touch ID (Latest Model) -
+                                        Blue</p>
+                                </div>
+                                <div class="border-dashed border-y border-translucent py-4">
+                                    <div class="d-flex align-items-center mb-5">
+                                        <div class="form-check mb-0"><input class="form-check-input" type="checkbox"
+                                                                            checked="checked"><label
+                                                class="form-check-label"></label></div>
+                                        <a href="details.html"> <img class="border border-translucent rounded"
+                                                                     src="/admin/img/products/2.png" width="53" alt=""></a>
+                                        <div class="ms-2"><a class="fs-9 fw-bold line-clamp-2 mb-2" href="details.html">
+                                            iPhone 13 pro max-Pacific Blue- 128GB</a>
+                                            <h5>$899.99</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-5">
+                                        <div class="form-check mb-0"><input class="form-check-input" type="checkbox"
+                                                                            checked="checked"><label
+                                                class="form-check-label"></label></div>
+                                        <a href="details.html"> <img class="border border-translucent rounded"
+                                                                     src="/admin/img/products/16.png" width="53" alt=""></a>
+                                        <div class="ms-2"><a class="fs-9 fw-bold line-clamp-2 mb-2" href="details.html">Apple
+                                            AirPods Pro</a>
+                                            <h5>$59.00</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-0">
+                                        <div class="form-check mb-0"><input class="form-check-input"
+                                                                            type="checkbox"><label
+                                                class="form-check-label"></label></div>
+                                        <a href="details.html"> <img class="border border-translucent rounded"
+                                                                     src="/admin/img/products/10.png" width="53" alt=""></a>
+                                        <div class="ms-2"><a class="fs-9 fw-bold line-clamp-2 mb-2" href="details.html">Apple
+                                            Magic Mouse (Wireless, Rechargable) - Silver, Worst mouse ever</a>
+                                            <h5>$89.00</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between pt-3">
+                                    <div>
+                                        <h5 class="mb-2 text-body-tertiary text-opacity-85">Total</h5>
+                                        <h4 class="mb-0 text-body-emphasis">$958.99</h4>
+                                    </div>
+                                    <div class="btn btn-outline-warning">Add 3 items to cart<span
+                                            class="fas fa-shopping-cart ms-2"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end of .container-->
+        </section><!-- <section> close ============================-->
+        <!-- ============================================-->
+
+    </div>
+
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+    <section class="py-0 mb-9">
+        <div class="container">
+            <div class="d-flex flex-between-center mb-3">
+                <div>
+                    <h3>Similar Products</h3>
+                    <p class="mb-0 text-body-tertiary fw-semibold">Essential for a better life</p>
+                </div>
+                <button class="btn btn-sm btn-phoenix-primary">View all</button>
+            </div>
+            <div class="swiper-theme-container products-slider">
+                <div class="swiper swiper theme-slider"
+                     data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"768":{"slidesPerView":3,"spaceBetween":16},"992":{"slidesPerView":4,"spaceBetween":16},"1200":{"slidesPerView":5,"spaceBetween":16},"1540":{"slidesPerView":6,"spaceBetween":16}}}'>
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/1.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">Fitbit Sense Advanced
+                                                Smartwatch with Tools for Heart Health, Stress Management &amp; Skin
+                                                Temperature Trends Carbon/Graphite, One Size (S &amp; L Bands)</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(59 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <p class="me-2 text-body text-decoration-line-through mb-0">$49.99</p>
+                                            <h3 class="text-body-emphasis mb-0">$34.99</h3>
+                                        </div>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">2 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/3.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">Apple MacBook Pro 13
+                                                inch-M1-8/256GB-Space Gray</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(13 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-9 text-body-highlight fw-bold mb-2">Apple care included</p>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <p class="me-2 text-body text-decoration-line-through mb-0">$1299.00</p>
+                                            <h3 class="text-body-emphasis mb-0">$1149.00</h3>
+                                        </div>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">2 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/5.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">Razer Kraken v3 x Wired 7.1
+                                                Surroung Sound Gaming headset</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(64 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-body-emphasis">$59.00</h3>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">1 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/2.png" alt=""><span
+                                                class="badge text-bg-success fs-10 product-verified-badge">Verified<span
+                                                class="fas fa-check ms-1"></span></span></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">iPhone 13 pro max-Pacific
+                                                Blue, 128GB storage</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(32 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-9 text-body-highlight fw-bold mb-2">Stock limited</p>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <p class="me-2 text-body text-decoration-line-through mb-0">$899.99</p>
+                                            <h3 class="text-body-emphasis mb-0">$855.00</h3>
+                                        </div>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">5 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/16.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">Apple AirPods Pro</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(39 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-9 text-body-highlight fw-bold mb-1">free with iPhone 5s</p>
+                                        <p class="fs-9 text-body-tertiary mb-2">Ships to Canada</p>
+                                        <h3 class="text-body-emphasis">$59.00</h3>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">3 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/10.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">Apple Magic Mouse
+                                                (Wireless, Rechargable) - Silver</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(6 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-9 text-body-highlight fw-bold mb-1">Bundle availabe</p>
+                                        <p class="fs-9 text-body-tertiary mb-2">Charger not included</p>
+                                        <h3 class="text-body-emphasis">$89.00</h3>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">2 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="position-relative text-decoration-none product-card h-100">
+                                <div class="d-flex flex-column justify-content-between h-100">
+                                    <div>
+                                        <div class="border border-1 border-translucent rounded-3 position-relative mb-3">
+                                            <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Add to wishlist"><span
+                                                    class="fas fa-heart d-block-hover"></span><span
+                                                    class="far fa-heart d-none-hover"></span></button>
+                                            <img class="img-fluid" src="/admin/img/products/6.png" alt=""></div>
+                                        <a class="stretched-link" href="details.html">
+                                            <h6 class="mb-2 lh-sm line-clamp-3 product-name">PlayStation 5 DualSense
+                                                Wireless Controller</h6>
+                                        </a>
+                                        <p class="fs-9"><span class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="fa fa-star text-warning"></span><span
+                                                class="text-body-quaternary fw-semibold ms-1">(67 people rated)</span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <p class="me-2 text-body text-decoration-line-through mb-0">$125.00</p>
+                                            <h3 class="text-body-emphasis mb-0">$89.00</h3>
+                                        </div>
+                                        <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">2 colors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-nav">
+                    <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
+                    <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
+                </div>
+            </div>
+        </div><!-- end of .container-->
+    </section><!-- <section> close ============================-->
+    <!-- ============================================-->
+
+    <div class="support-chat-container">
+        <div class="container-fluid support-chat">
+            <div class="card bg-body-emphasis">
+                <div class="card-header d-flex flex-between-center px-4 py-3 border-bottom border-translucent">
+                    <h5 class="mb-0 d-flex align-items-center gap-2">Demo widget<span
+                            class="fa-solid fa-circle text-success fs-11"></span></h5>
+                    <div class="btn-reveal-trigger">
+                        <button class="btn btn-link p-0 dropdown-toggle dropdown-caret-none transition-none d-flex"
+                                type="button" id="support-chat-dropdown" data-bs-toggle="dropdown"
+                                data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                data-bs-reference="parent"><span class="fas fa-ellipsis-h text-body"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="support-chat-dropdown"><a
+                                class="dropdown-item" href="#!">Request a callback</a><a class="dropdown-item"
+                                                                                         href="#!">Search in chat</a><a
+                                class="dropdown-item" href="#!">Show history</a><a class="dropdown-item" href="#!">Report
+                            to Admin</a><a class="dropdown-item btn-support-chat" href="#!">Close Support</a></div>
+                    </div>
+                </div>
+                <div class="card-body chat p-0">
+                    <div class="d-flex flex-column-reverse scrollbar h-100 p-3">
+                        <div class="text-end mt-6"><a
+                                class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3"
+                                href="#!">
+                            <p class="mb-0 fw-semibold fs-9">I need help with something</p><span
+                                class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3"
+                               href="#!">
+                            <p class="mb-0 fw-semibold fs-9">I can’t reorder a product I previously ordered</p><span
+                                class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3"
+                               href="#!">
+                            <p class="mb-0 fw-semibold fs-9">How do I place an order?</p><span
+                                class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a><a class="false d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3"
+                               href="#!">
+                            <p class="mb-0 fw-semibold fs-9">My payment method not working</p><span
+                                class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
+                        </a></div>
+                        <div class="text-center mt-auto">
+                            <div class="avatar avatar-3xl status-online"><img
+                                    class="rounded-circle border border-3 border-light-subtle"
+                                    src="/admin/img/team/30.webp" alt=""></div>
+                            <h5 class="mt-2 mb-3">Eric</h5>
+                            <p class="text-center text-body-emphasis mb-0">Ask us anything – we’ll get back to you here
+                                or by email within 24 hours.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center gap-2 border-top border-translucent ps-3 pe-4 py-3">
+                    <div class="d-flex align-items-center flex-1 gap-3 border border-translucent rounded-pill px-4">
+                        <input class="form-control outline-none border-0 flex-1 fs-9 px-0" type="text"
+                               placeholder="Write message"><label
+                            class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0"
+                            for="supportChatPhotos"><span class="fa-solid fa-image"></span></label><input class="d-none"
+                                                                                                          type="file"
+                                                                                                          accept="image/*"
+                                                                                                          id="supportChatPhotos"><label
+                            class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0"
+                            for="supportChatAttachment"> <span class="fa-solid fa-paperclip"></span></label><input
+                            class="d-none" type="file" id="supportChatAttachment"></div>
+                    <button class="btn p-0 border-0 send-btn"><span class="fa-solid fa-paper-plane fs-9"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="btn p-0 border border-translucent btn-support-chat"><span
+                class="fs-8 btn-text text-primary text-nowrap">Chat demo</span><span
+                class="fa-solid fa-circle text-success fs-9 ms-2"></span><span
+                class="fa-solid fa-chevron-down text-primary fs-7"></span></button>
+    </div>
+
+    <div th:replace="~{customer/__fragments/footer.html :: footer}"></div>
+</main>
+
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<script>
+    function changeQuantity(amount) {
+        const quantityInput = document.getElementById('quantityInput');
+        let currentValue = parseInt(quantityInput.value);
+        let minValue = parseInt(quantityInput.min);
+
+        if (!isNaN(currentValue)) {
+            let newValue = currentValue + amount;
+            if (newValue >= minValue) {
+                quantityInput.value = newValue;
+            }
+        }
+    }
+</script>
+<script>
+    document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Chặn sự kiện submit mặc định
+        document.getElementById('cartQuantityInput').value = document.getElementById('quantityInput').value;
+        document.getElementById('cartNoteInput').value = document.getElementById('note').value;
+        this.submit(); // Gửi form sau khi cập nhật các giá trị
+    });
+</script>
+
+<script src="/admin/vendors/popper/popper.min.js"></script>
+<script src="/admin/vendors/bootstrap/bootstrap.min.js"></script>
+<script src="/admin/vendors/anchorjs/anchor.min.js"></script>
+<script src="/admin/vendors/is/is.min.js"></script>
+<script src="/admin/vendors/fontawesome/all.min.js"></script>
+<script src="/admin/vendors/lodash/lodash.min.js"></script>
+<script src="/admin/v3/polyfill.min.js?features=window.scroll"></script>
+<script src="/admin/vendors/list.js/list.min.js"></script>
+<script src="/admin/vendors/feather-icons/feather.min.js"></script>
+<script src="/admin/vendors/dayjs/dayjs.min.js"></script>
+<script src="/admin/vendors/swiper/swiper-bundle.min.js"></script>
+<script src="/admin/vendors/dropzone/dropzone.min.js"></script>
+<script src="/admin/vendors/rater-js/index.js"></script>
+<script src="/admin/vendors/glightbox/glightbox.min.js"></script>
+<script src="/admin/js/phoenix.js"></script>
+</body>
+
+</html>

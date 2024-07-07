@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html data-navigation-type="default" data-navbar-horizontal-shape="default" lang="en-US" dir="ltr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Phoenix</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicons/favicon.ico">
+    <link rel="manifest" href="img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script th:src="@{/admin/vendors/simplebar/simplebar.min.js}"></script>
+    <script th:src="@{/admin/js/config.js}"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="/admin/css2.css" type="text/html" rel="stylesheet">
+    <link th:src="@{/admin/vendors/simplebar/simplebar.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/release/v4.0.8/css/line.css">
+    <link th:href="@{/admin/css/theme-rtl.min.css}" type="text/css" rel="stylesheet" id="style-rtl">
+    <link th:href="@{/admin/css/theme.min.css}" type="text/css" rel="stylesheet" id="style-default">
+    <link th:href="@{/admin/css/user-rtl.min.css}" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link th:href="@{/admin/css/user.min.css}" type="text/css" rel="stylesheet" id="user-style-default">
+    <script>
+        var phoenixIsRTL = window.config.config.phoenixIsRTL;
+        if (phoenixIsRTL) {
+          var linkDefault = document.getElementById('style-default');
+          var userLinkDefault = document.getElementById('user-style-default');
+          linkDefault.setAttribute('disabled', true);
+          userLinkDefault.setAttribute('disabled', true);
+          document.querySelector('html').setAttribute('dir', 'rtl');
+        } else {
+          var linkRTL = document.getElementById('style-rtl');
+          var userLinkRTL = document.getElementById('user-style-rtl');
+          linkRTL.setAttribute('disabled', true);
+          userLinkRTL.setAttribute('disabled', true);
+        }
+    </script>
+    <link th:src="@{/admin/vendors/leaflet/leaflet.css}" rel="stylesheet">
+    <link th:src="@{/admin/vendors/leaflet.markercluster/MarkerCluster.css}" rel="stylesheet">
+    <link th:src="@{/admin/vendors/leaflet.markercluster/MarkerCluster.Default.css}" rel="stylesheet">
+
+</head>
+<body>
+<main class="main" id="top">
+    <div th:replace="~{admin/__fragments/menu.html :: menu}"></div>
+    <div th:replace="~{admin/__fragments/header.html :: header}"></div>
+    <div class="content">
+        <div class="pb-5">
+            <div class="row g-4">
+                <div class="col-12 col-xxl-6">
+                    <h1 class="mb-5 text-center text-primary">Management Product</h1>
+                    <div class="bg-white py-5 px-3">
+                        <form id="addUserForm" enctype="multipart/form-data" th:action="@{/admin/product/management}" th:object="${product}"
+                              method="post">
+                            <div class="row g-4 mb-2">
+                                <div class="col-md-4">
+                                    <label class="form-label" for="name">Name</label>
+                                    <input class="form-control" placeholder="name" required="" type="text"
+                                           id="name" th:field="*{name}"/>
+                                    <div class="valid-feedback alert alert-warning"
+                                         th:if="${#fields.hasErrors('name')}"
+                                         th:errors="*{name}"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="vendor" class="form-label">Vendor</label>
+                                    <input class="form-control" id="vendor" type="text" placeholder="Vendor"
+                                           th:field="*{vendor}"/>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label" for="price">Price</label>
+                                    <input class="form-control" id="price" type="text" placeholder="$"
+                                           th:field="*{price}"/>
+                                    <div class="valid-feedback alert alert-warning"
+                                         th:if="${#fields.hasErrors('price')}"
+                                         th:errors="*{price}"></div>
+                                </div>
+                            </div>
+                            <div class="row g-4 mb-2">
+                                <div class="col-md-4">
+                                    <label for="quantity" class="form-label">Quantity</label>
+                                    <input class="form-control" id="quantity" type="text"
+                                           placeholder="Quantity"
+                                           th:field="*{quantity}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" >Category Name</label>
+                                    <select class="form-control border border-dark" th:field="*{category}">
+                                        <option th:each="category : ${categories}"
+                                                th:value="${category.id}"
+                                                th:text="${category.name}"
+                                        ></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label" for="tags">Tags</label>
+                                    <input class="form-control" type="tel" id="tags" name="phone" placeholder="Tags"
+                                           required
+                                           th:field="*{tags}">
+                                    <div class="valid-feedback alert alert-warning"
+                                         th:if="${#fields.hasErrors('tags')}"
+                                         th:errors="*{tags}"></div>
+                                </div>
+                            </div>
+                            <div class="row g-4 mb-2">
+                                <div class="">
+                                    <label class="form-label" for="description">Description</label>
+                                    <input class="form-control" id="description" type="text" placeholder="Description"
+                                           required="" th:field="*{description}"/>
+                                    <div class="valid-feedback alert alert-warning"
+                                         th:if="${#fields.hasErrors('description')}"
+                                         th:errors="*{description}"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Upload Image</label>
+                                <input class="form-control" type="file" th:field="*{images}" multiple>
+                            </div>
+
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<script th:src="@{/admin/vendors/popper/popper.min.js}"></script>
+<script th:src="@{/admin/vendors/bootstrap/bootstrap.min.js}"></script>
+<script th:src="@{/admin/vendors/anchorjs/anchor.min.js}"></script>
+<script th:src="@{/admin/vendors/is/is.min.js}"></script>
+<script th:src="@{/admin/vendors/fontawesome/all.min.js}"></script>
+<script th:src="@{/admin/vendors/lodash/lodash.min.js}"></script>
+<script src="/admin/v3/polyfill.min.js?features=window.scroll"></script>
+<script th:src="@{/admin/vendors/list.js/list.min.js}"></script>
+<script th:src="@{/admin/vendors/feather-icons/feather.min.js}"></script>
+<script th:src="@{/admin/vendors/dayjs/dayjs.min.js}"></script>
+<script th:src="@{/admin/vendors/leaflet/leaflet.js}"></script>
+<script th:src="@{/admin/vendors/leaflet.markercluster/leaflet.markercluster.js}"></script>
+<script th:src="@{/admin/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js}"></script>
+<script th:src="@{/admin/js/phoenix.js}"></script>
+<script th:src="@{/admin/vendors/echarts/echarts.min.js}"></script>
+<script th:src="@{/admin/js/ecommerce-dashboard.js}"></script>
+
+</body>
+</html>
