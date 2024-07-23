@@ -53,6 +53,41 @@
           userLinkRTL.setAttribute('disabled', true);
         }
     </script>
+    <style>
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 15px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -83,16 +118,17 @@
                             </div>
                             <div class="mb-3">
                                 <label for="minPrice" class="form-label">Min Price</label>
-                                <input type="number" class="form-control" id="minPrice" name="minPrice" step="0.01"
-                                       th:value="${minPrice}">
+                                <input type="range" class="slider" id="minPrice" name="minPrice" step="0.01" min="0" th:max="${max}" oninput="minPriceOutput.value = minPrice.value">
+                                <output id="minPriceOutput" th:text="${minPrice == null ? 0 : minPrice}"></output>
                             </div>
                             <div class="mb-3">
                                 <label for="maxPrice" class="form-label">Max Price</label>
-                                <input type="number" class="form-control" id="maxPrice" name="maxPrice" step="0.01"
-                                       th:value="${maxPrice}">
+                                <input type="range" class="slider" id="maxPrice" name="maxPrice" step="0.01" min="0" th:max="${max}" oninput="maxPriceOutput.value = maxPrice.value">
+                                <output id="maxPriceOutput" th:text="${maxPrice == null ? max : maxPrice}"></output>
                             </div>
+
                             <div class="rating">
-                                <label class="form-label">Rating</label>
+                                <label class="form-label">Min Rating</label>
                                 <div>
                                     <input type="radio" id="star1" name="minRating" th:value="1" th:checked="${minRating == 1}" />
                                     <label for="star1"><span class="text-warning">&#9733;</span></label>
@@ -267,14 +303,32 @@
     </div>
 
     <div th:replace="~{customer/__fragments/footer.html :: footer}"></div>
-</main><!-- ===============================================-->
-<!--    End of Main Content-->
-<!-- ===============================================-->
+</main>
 
 
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
+<script>
+    function validateRange() {
+        var minPrice = document.getElementById('minPrice');
+        var maxPrice = document.getElementById('maxPrice');
+        var minPriceOutput = document.getElementById('minPriceOutput');
+        var maxPriceOutput = document.getElementById('maxPriceOutput');
+
+        if (parseFloat(minPrice.value) >= parseFloat(maxPrice.value)) {
+            if (minPrice === document.activeElement) {
+                maxPrice.value = parseFloat(minPrice.value) + 0.01;
+            } else {
+                minPrice.value = parseFloat(maxPrice.value) - 0.01;
+            }
+        }
+
+        minPriceOutput.value = minPrice.value;
+        maxPriceOutput.value = maxPrice.value;
+    }
+
+    document.getElementById('minPrice').addEventListener('input', validateRange);
+    document.getElementById('maxPrice').addEventListener('input', validateRange);
+</script>
+
 <script src="/admin/vendors/popper/popper.min.js"></script>
 <script src="/admin/vendors/bootstrap/bootstrap.min.js"></script>
 <script src="/admin/vendors/anchorjs/anchor.min.js"></script>

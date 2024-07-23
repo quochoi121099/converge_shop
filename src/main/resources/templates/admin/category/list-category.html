@@ -61,6 +61,32 @@
 <main class="main" id="top">
     <div th:replace="~{admin/__fragments/menu.html :: menu}"></div>
     <div th:replace="~{admin/__fragments/header.html :: header}"></div>
+    <div class="content">
+        <div class="pb-5">
+            <div class="row g-4">
+                <div class="col-12 col-xxl-10">
+                    <h2 class="text-primary">List of Categories</h2>
+
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Parent Name</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="category : ${categories}">
+                            <td th:text="${category.name}" class="pl-2 text-info">Category Name</td>
+                            <td th:text="${category.parentCategory != null ? category.parentCategory.name : 'None'}" class="text-success">Parent Name</td>
+                            <td th:text="${category.description}">Description</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

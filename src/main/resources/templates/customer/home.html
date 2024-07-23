@@ -65,48 +65,6 @@
     <div class="ecommerce-homepage pt-5 mb-9">
 
 
-<!--        <section class="py-0">-->
-<!--            <div class="container-small">-->
-<!--                <div class="scrollbar">-->
-<!--                    <div class="d-flex justify-content-between"><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2 bg-warning-subtle light"><span-->
-<!--                                class="fs-4 uil uil-star text-warning"></span></div>-->
-<!--                        <p class="nav-label">Deals</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-shopping-bag"></span></div>-->
-<!--                        <p class="nav-label">Grocery</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-watch-alt"></span></div>-->
-<!--                        <p class="nav-label">Fashion</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-mobile-android"></span></div>-->
-<!--                        <p class="nav-label">Mobile</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-monitor"></span></div>-->
-<!--                        <p class="nav-label">Electronics</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-estate"></span></div>-->
-<!--                        <p class="nav-label">Home</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-lamp"></span></div>-->
-<!--                        <p class="nav-label">Dining</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-gift"></span></div>-->
-<!--                        <p class="nav-label">Gifts</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-wrench"></span></div>-->
-<!--                        <p class="nav-label">Tools</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-plane-departure"></span></div>-->
-<!--                        <p class="nav-label">Travel</p>-->
-<!--                    </a><a class="icon-nav-item" href="#!">-->
-<!--                        <div class="icon-container mb-2"><span class="fs-4 uil uil-palette"></span></div>-->
-<!--                        <p class="nav-label">Others</p>-->
-<!--                    </a></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
-
         <section class="py-0 px-xl-3">
             <!-- sale for product -->
             <div class="container px-xl-0 px-xxl-3" th:if="${!saleListProduct.isEmpty()}">
@@ -190,7 +148,7 @@
 
             <!-- Product -->
             <div class="container px-xl-0 px-xxl-3">
-                <div th:each="category : ${parentCategoriesList}" class="p-3" th:if="${#lists.size(category.products) > 0}">
+                <div th:each="category : ${parentCategoriesList}" class="p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3" >
                         <h3 th:text="${category.name}"></h3>
                         <a class="fw-bold d-none d-md-block" th:href="@{'/' + ${category.name}}">Explore more<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
@@ -198,31 +156,31 @@
                     <div class="swiper-theme-container products-slider">
                         <div class="swiper swiper theme-slider"
                              data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'>
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide" th:each="product : ${category.products}">
-                                    <div class="position-relative text-decoration-none product-card h-100">
+                            <div class="swiper-wrapper" th:each="subcategory : ${category.subcategory}">
+                                <div class="swiper-slide"  th:if="${subcategory.products != null}">
+                                    <div class="position-relative text-decoration-none product-card h-100" th:each="product : ${subcategory.products}">
                                         <div class="d-flex flex-column justify-content-between h-100">
                                             <div>
-                                                <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="Add to wishlist">
-                                                    <span class="fas fa-heart d-block-hover"></span>
-                                                    <span class="far fa-heart d-none-hover"></span>
-                                                </button>
+<!--                                                <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"-->
+<!--                                                        data-bs-toggle="tooltip" data-bs-placement="top"-->
+<!--                                                        title="Add to wishlist">-->
+<!--                                                    <span class="fas fa-heart d-block-hover"></span>-->
+<!--                                                    <span class="far fa-heart d-none-hover"></span>-->
+<!--                                                </button>-->
                                                 <div th:each="imageName, iterStat : ${product.imageNames}" th:if="${iterStat.index == 0}">
-                                                    <img th:src="@{${imageName}}" alt="Product Image" class="d-block img-thumbnail" style="width: 280px;">
+                                                    <img th:src="@{${imageName}}" alt="Product Image" class="d-block img-thumbnail" style="width: 200px;">
                                                 </div>
                                                 <a class="stretched-link" th:href="@{/product/details/{uuid}(uuid=${product.id})}">
                                                     <h6 class="mb-2 lh-sm line-clamp-3 product-name" th:text="${product.name}"></h6>
                                                 </a>
-                                                <p class="fs-9">
-                                                    <span class="fa fa-star text-warning"></span>
-                                                    <span class="fa fa-star text-warning"></span>
-                                                    <span class="fa fa-star text-warning"></span>
-                                                    <span class="fa fa-star text-warning"></span>
-                                                    <span class="fa fa-star text-warning"></span>
-                                                    <span class="text-body-quaternary fw-semibold ms-1">(59 people rated)</span>
-                                                </p>
+<!--                                                <p class="fs-9">-->
+<!--                                                    <span class="fa fa-star text-warning"></span>-->
+<!--                                                    <span class="fa fa-star text-warning"></span>-->
+<!--                                                    <span class="fa fa-star text-warning"></span>-->
+<!--                                                    <span class="fa fa-star text-warning"></span>-->
+<!--                                                    <span class="fa fa-star text-warning"></span>-->
+<!--                                                    <span class="text-body-quaternary fw-semibold ms-1">(59 people rated)</span>-->
+<!--                                                </p>-->
                                                 <div>
                                                     <h3 class="text-body-emphasis" th:text="${product.price}"></h3>
                                                 </div>

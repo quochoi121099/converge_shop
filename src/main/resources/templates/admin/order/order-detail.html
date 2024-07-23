@@ -75,10 +75,10 @@
                 <li class="breadcrumb-item active">Default</li>
             </ol>
         </nav>
-        <div class="mb-9" th:each="orderItem : ${orderItems}">
-            <h2 class="mb-0">Order <span th:text="'#' + ${orderItem.order.id}"></span></h2>
+        <div class="mb-9">
+            <h2 class="mb-0">Order</h2>
             <div class="d-sm-flex flex-between-center mb-3" >
-                <p class="text-body-secondary lh-sm mb-0 mt-2 mt-sm-0">Customer ID : <a class="fw-bold" th:text="${orderItem.order.user.id}"></a></p>
+                <p class="text-body-secondary lh-sm mb-0 mt-2 mt-sm-0">Customer ID : <a class="fw-bold" th:text="${userAuth.id}"></a></p>
                 <div class="d-flex"><button class="btn btn-link pe-3 ps-0 text-body"><span class="fas fa-print me-2"></span>Print</button><button class="btn btn-link px-3 text-body"><span class="fas fa-undo me-2"></span>Refund</button>
                     <div class="dropdown"><button class="btn text-body dropdown-toggle dropdown-caret-none ps-3 pe-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">More action<span class="fas fa-chevron-down ms-2"></span></button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -106,7 +106,7 @@
                                 <tbody class="list" id="order-table-body">
                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static" th:each="orderItem : ${orderItems}">
                                     <td class="customer align-middle white-space-nowrap">
-                                        <img style="max-width: 100px; min-width: 70px;" class="" th:src="@{'/media/images/product/' + ${orderItem.product.imageNames[0]}}" alt="User Image">
+                                        <img style="max-width: 100px; min-width: 70px;" class="" th:src="${orderItem.product.imageNames[0]}" alt="User Image">
 
                                     </td>
                                     <td class="customer align-middle white-space-nowrap">

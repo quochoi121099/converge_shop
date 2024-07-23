@@ -30,36 +30,36 @@
     <section class="pt-5 pb-9">
         <div class="container-small cart">
             <div class="row g-5">
-                <div class="col-12 col-lg-8">
+                <div class="col-12 col-lg-10">
                     <div class="table-responsive scrollbar mx-n1 px-1">
-                        <div th:if="${newWishlist != null}">
+                        <div th:if="${newWishlist != null}" class="table-responsive scrollbar">
                             <h3 class="text-center">Your Wishlist</h3>
-                            <table class="table table-striped table-bordered">
+                            <table class="table fs-9 mb-0">
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Name</th>
+                                    <th>Product</th>
                                     <th>Price</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody th:each="wishlist : ${newWishlist}">
-                                <tr>
-                                    <td class="align-middle white-space-nowrap py-0" style="width: 55px;">
-                                        <a class="d-block border border-translucent rounded-2">
+                                <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                                    <td class="white-space-nowrap ps-0 py-0" style="width: 55px;">
+                                        <a class="border border-translucent rounded-2 d-inline-block">
                                             <img th:src="${wishlist.imageNames[0]}" alt="" width="53">
                                         </a>
                                     </td>
-                                    <td class="products align-middle">
-                                        <a class="fw-semibold mb-0 line-clamp-2"
+                                    <td class="products align-middle pe-11">
+                                        <a class="fw-semibold mb-0 line-clamp-1"
                                            th:href="@{/product/details/} + ${wishlist.id}">
                                             <span th:text="${wishlist.name}">Product Name</span>
                                         </a>
                                     </td>
-                                    <td class="price align-middle text-body fs-9 fw-semibold text-end">
+                                    <td class="color align-middle white-space-nowrap fs-9 text-body">
                                         <span th:text="${wishlist.price + ' $'}"></span>
                                     </td>
-                                    <td class="align-middle white-space-nowrap text-end pe-0 ps-3">
+                                    <td class="color align-middle white-space-nowrap fs-9 text-body">
                                         <form th:action="@{/product/wishlist}" method="post">
                                             <input type="hidden" name="wishlistId" th:value="${wishlist.id}"/>
                                             <button type="submit"
@@ -74,31 +74,31 @@
                         </div>
                         <div th:if="${oldWishlist != null}">
                             <h3 class="text-center">Old Wishlist</h3>
-                            <table class="table table-striped table-bordered">
+                            <table class="table fs-9 mb-0">
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Name</th>
+                                    <th>Product</th>
                                     <th>Price</th>
                                 </tr>
                                 </thead>
                                 <tbody th:each="wishlist : ${oldWishlist}">
-                                <tr>
-                                    <td class="align-middle white-space-nowrap py-0" style="width: 55px;">
-                                        <a class="d-block border border-translucent rounded-2">
+                                <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                                    <td class="white-space-nowrap ps-0 py-0" style="width: 55px;">
+                                        <a class="border border-translucent rounded-2 d-inline-block">
                                             <img th:src="${wishlist.imageNames[0]}" alt="" width="53">
                                         </a>
                                     </td>
-                                    <td class="products align-middle">
-                                        <a class="fw-semibold mb-0 line-clamp-2"
+                                    <td class="products align-middle pe-11">
+                                        <a class="fw-semibold mb-0 line-clamp-1"
                                            th:href="@{/product/details/} + ${wishlist.id}">
                                             <span th:text="${wishlist.name}">Product Name</span>
                                         </a>
                                     </td>
-                                    <td class="price align-middle text-body fs-9 fw-semibold text-end">
+                                    <td class="color align-middle white-space-nowrap fs-9 text-body">
                                         <span th:text="${wishlist.price + ' $'}"></span>
                                     </td>
-                                    <td class="align-middle white-space-nowrap text-end pe-0 ps-3">
+                                    <td class="color align-middle white-space-nowrap fs-9 text-body">
                                         <form th:action="@{/product/wishlist}" method="post">
                                             <input type="hidden" name="wishlistId" th:value="${wishlist.id}"/>
                                             <button type="submit"

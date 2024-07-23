@@ -78,6 +78,16 @@
                                          th:if="${#fields.hasErrors('name')}"
                                          th:errors="*{name}"></div>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Parent Category</label>
+                                    <select class="form-control border border-dark" th:field="*{parentCategory}">
+                                        <option value="">No parent</option>
+                                        <option th:each="parentCategory : ${parentCategories}"
+                                                th:value="${parentCategory.id}"
+                                                th:text="${parentCategory.name}"
+                                        ></option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="row g-6 mb-2">
 
